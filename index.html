@@ -261,8 +261,10 @@
   }
 
   function buy(item) {
+    // تسجيل العملية في الويبهوك
     log("طلب 💰", `المستخدم **${user.username}** طلب: **${item}**`);
-    window.location.href = "https://discord.gg/GjzACbTeJT";
+    // فتح رابط السيرفر في نافذة أو تبويب جديد
+    window.open("https://discord.gg/GjzACbTeJT", "_blank");
   }
 
   function log(title, msg) {
