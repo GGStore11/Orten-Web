@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orten Store</title>
+  <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1483620716212654181/1486541618474385418/Logo_2.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <div class="lock-card">
+      <img src="https://cdn.discordapp.com/attachments/1483620716212654181/1486541618474385418/Logo_2.png" class="logo-main" alt="Logo">
+      <h1>Orten Store</h1>
+      <p class="text-muted">اربط حسابك للبدء</p>
+      <button class="btn-connect" onclick="login()">ربط الحساب الآن</button>
+      <p class="status-msg" id="status-msg"></p>
+    </div>
+  </div>
+
+  <!-- Main Store -->
+  <div id="main-store">
+    <header>
+      <div class="user-menu-container" onclick="toggleDropdown()">
+        <div id="user-tag">
+          <img id="user-img" src="" alt="">
+          <span id="user-name">...</span>
+        </div>
+        <div id="logout-menu" class="dropdown-menu">
+          <button onclick="logout()">تسجيل الخروج</button>
+        </div>
+      </div>
+
+      <nav>
+        <span onclick="showSection('pricing')" id="nav-pricing" class="active">الأسعار</span>
+        <span onclick="showSection('services')" id="nav-services">الخدمات</span>
+        <span onclick="showSection('policy')" id="nav-policy">السياسة</span>
+        <span onclick="showSection('free')" id="nav-free">الخدمات المجانية</span>
+      </nav>
+
+      <div class="logo-header">
+        <div class="logo-text">Orten Store</div>
+        <img src="https://cdn.discordapp.com/attachments/1483620716212654181/1486541618474385418/Logo_2.png" class="logo-img">
+      </div>
+    </header>
+
+    <div class="container">
+
+      <!-- Section: Pricing -->
+      <div id="section-pricing" class="content-section active">
+        <h1 style="font-size: 32px;">قائمة المنتجات</h1>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div class="bot-name">بوت تيكت</div>
+            <div class="price-tag">9.99 <span>ر.س</span></div>
+            <ul class="features-list">
+              <li>تحكم شامل وسهولة استخدام</li>
+              <li>دعم فني على مدار الساعة</li>
+            </ul>
+            <button class="btn-buy-now" onclick="buy('Ticket Bot')">أطلب الآن</button>
+          </div>
+          <div class="price-card">
+            <div class="bot-name">بوت الألعاب</div>
+            <div class="price-tag">9.99 <span>ر.س</span></div>
+            <ul class="features-list">
+              <li>أكثر من 20 لعبة ممتعة</li>
+              <li>نظام جوائز واقتصاد</li>
+            </ul>
+            <button class="btn-buy-now" onclick="buy('Games Bot')">أطلب الآن</button>
+          </div>
+          <div class="price-card" style="border-left: none;">
+            <div class="bot-name">البوت الصوتي</div>
+            <div class="price-tag">1 <span>ر.س</span></div>
+            <ul class="features-list">
+              <li>دعم جودة صوت فائقة</li>
+              <li>تحديثات وصيانة دورية</li>
+            </ul>
+            <button class="btn-buy-now" onclick="buy('Music Bot')">أطلب الآن</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Services -->
+      <div id="section-services" class="content-section">
+        <h1>خدماتنا الاحترافية</h1>
+        <div class="glass-box">
+          <p>• برمجة بوتات ديسكورد مخصصة بالكامل.</p>
+          <p>• حماية وتأمين السيرفرات من الاختراقات.</p>
+          <p>• تصميم وبرمجة لوحات تحكم ويب (Dashboards).</p>
+        </div>
+      </div>
+
+      <!-- Section: Policy -->
+      <div id="section-policy" class="content-section">
+        <h1>سياسة أورتن</h1>
+        <div class="glass-box">
+          <p>1. تسليم المنتجات يتم بشكل فوري وآلي.</p>
+          <p>2. لا يمكن استبدال المنتج بعد التفعيل.</p>
+          <p>3. الدعم الفني متاح لجميع العملاء مجاناً.</p>
+        </div>
+      </div>
+
+      <!-- Section: Free Services -->
+      <div id="section-free" class="content-section">
+        <h1>الخدمات المجانية</h1>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div class="bot-name">بوت مجاني للدردشة</div>
+            <div class="price-tag">مجاني</div>
+            <ul class="features-list">
+              <li>بوت يعمل على الردود التلقائية</li>
+              <li>سهل الاستخدام والتثبيت</li>
+            </ul>
+            <button class="btn-buy-now" onclick="openFree('Chat Bot')">استخدم الآن</button>
+          </div>
+          <div class="price-card">
+            <div class="bot-name">بوت الألعاب المجاني</div>
+            <div class="price-tag">مجاني</div>
+            <ul class="features-list">
+              <li>يحتوي على 5 ألعاب ممتعة</li>
+              <li>دعم مجاني من مجتمعنا</li>
+            </ul>
+            <button class="btn-buy-now" onclick="openFree('Mini Games Bot')">استخدم الآن</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
