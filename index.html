@@ -4,108 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Orten Store</title>
-  <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1483620716212654181/1486541618474385418/Logo_2.png?ex=69c5e144&is=69c48fc4&hm=728c87a2ac264d41e9496b6098310d73d890ba03667c729f1dbba91b9de5e749&">
+  <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #05080f; --accent-blue: #5c85d6;
-      --card-bg: #0a0e17; --border-color: rgba(255, 255, 255, 0.08);
-      --text-main: #ffffff; --text-muted: #a0aec0; --discord-blurple: #5865F2;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
-
-    /* واجهة الهبوط */
-    #landing-page {
-      height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-      background: radial-gradient(circle at center, #111d35 0%, #05080f 100%);
-      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .lock-card {
-      text-align: center; padding: 50px; background: rgba(255,255,255,0.03); 
-      border: 1px solid var(--border-color); border-radius: 30px; backdrop-filter: blur(15px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 90%; max-width: 450px;
-    }
-    .logo-main { width: 110px; height: 110px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--accent-blue); object-fit: cover; }
-    
-    .btn-connect {
-      background: var(--discord-blurple); color: white; padding: 15px 30px; border-radius: 12px;
-      font-weight: 800; border: none; cursor: pointer; font-size: 18px; width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 25px; transition: 0.3s;
-    }
-    .btn-connect:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4); }
-
-    /* شريط التنقل */
-    #main-store { display: none; opacity: 0; transition: 1s; }
-    header { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; background: rgba(5, 8, 15, 0.8); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px); }
-    
-    .user-menu-container { position: relative; cursor: pointer; }
-    #user-tag { display: flex; align-items: center; gap: 10px; background: rgba(92, 133, 214, 0.1); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--accent-blue); transition: 0.3s; }
-    #user-tag:hover { background: rgba(92, 133, 214, 0.2); }
-    #user-img { width: 28px; height: 28px; border-radius: 50%; }
-    
-    .dropdown-menu {
-      position: absolute; top: 125%; right: 0; background: #151921; border: 1px solid var(--border-color);
-      border-radius: 12px; width: 160px; display: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 200;
-    }
-    .dropdown-menu button {
-      width: 100%; padding: 12px; background: none; border: none; color: #ff4d4d; font-weight: 700; cursor: pointer; text-align: center;
-    }
-
-    nav span { cursor: pointer; font-weight: 600; padding: 8px 15px; font-size: 15px; color: var(--text-muted); transition: 0.3s; position: relative; }
-    nav span:hover { color: var(--text-main); }
-    nav span.active { color: var(--accent-blue); }
-    nav span.active::after { content: ''; position: absolute; bottom: -18px; left: 0; width: 100%; height: 2px; background: var(--accent-blue); box-shadow: 0 0 10px var(--accent-blue); }
-
-    /* حاوية المحتوى المحدثة لانتقالات احترافية */
-    .container { max-width: 1200px; margin: auto; padding: 60px 20px; text-align: center; position: relative; }
-    
-    /* ستايل الأقسام */
-    .content-section { 
-      display: none; 
-      opacity: 0; 
-      transform: translateY(30px); 
-      transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .content-section.active { 
-      display: block; 
-      opacity: 1; 
-      transform: translateY(0); 
-    }
-
-    /* ستايل بطاقات الأسعار */
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); border: 1px solid var(--border-color); border-radius: 24px; overflow: hidden; margin-top: 40px; background: var(--card-bg); }
-    .price-card { padding: 40px 25px; border-left: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-    .price-card:hover { background: rgba(255,255,255,0.02); }
-    .price-card:last-child { border-left: none; }
-    .bot-name { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-    .price-tag { font-size: 38px; font-weight: 800; color: #fff; margin-bottom: 5px; }
-    .features-list { list-style: none; width: 100%; text-align: right; margin-bottom: 30px; border-top: 1px solid var(--border-color); padding-top: 20px; }
-    .features-list li { font-size: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #ced4da; }
-    .features-list li::before { content: "✓"; color: var(--accent-blue); font-weight: 900; }
-    .btn-buy-now { width: 100%; padding: 14px; border-radius: 10px; background: var(--accent-blue); color: white; border: none; cursor: pointer; font-weight: 800; transition: 0.3s; }
-    .btn-buy-now:hover { transform: scale(1.03); background: #4a6fb3; }
-
-    /* ستايل الخدمات والسياسة المطور */
-    .glass-box {
-      margin-top: 30px; text-align: right; background: rgba(255,255,255,0.02); padding: 40px; 
-      border-radius: 24px; border: 1px solid var(--border-color); max-width: 800px; margin-inline: auto;
-      backdrop-filter: blur(5px);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+  <!-- Landing Page -->
   <div id="landing-page">
     <div class="lock-card">
-      <img src="https://cdn.discordapp.com/attachments/1483620716212654181/1486541618474385418/Logo_2.png?ex=69c5e144&is=69c48fc4&hm=728c87a2ac264d41e9496b6098310d73d890ba03667c729f1dbba91b9de5e749&" class="logo-main" alt="Logo">
+      <img src="assets/logo.png" class="logo-main" alt="Logo">
       <h1>Orten Store</h1>
-      <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">اربط حسابك للبدء</p>
+      <p class="text-muted">اربط حسابك للبدء</p>
       <button class="btn-connect" onclick="login()">ربط الحساب الآن</button>
-      <p id="status-msg" style="margin-top: 15px; font-size: 12px; color: var(--accent-blue);"></p>
+      <p id="status-msg" class="status-msg"></p>
     </div>
   </div>
 
+  <!-- Main Store -->
   <div id="main-store">
     <header>
       <div class="user-menu-container" onclick="toggleDropdown()">
@@ -122,18 +37,20 @@
         <span onclick="showSection('pricing')" id="nav-pricing" class="active">الأسعار</span>
         <span onclick="showSection('services')" id="nav-services">الخدمات</span>
         <span onclick="showSection('policy')" id="nav-policy">السياسة</span>
+        <span onclick="showSection('support')" id="nav-support">الدعم</span>
+        <span onclick="showSection('faq')" id="nav-faq">الأسئلة الشائعة</span>
       </nav>
 
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="font-size: 20px; font-weight: 900; color: var(--accent-blue);">Orten Store</div>
-        <img src="https://cdn.discordapp.com/attachments/1483620716212654181/1486541618474385418/Logo_2.png?ex=69c5e144&is=69c48fc4&hm=728c87a2ac264d41e9496b6098310d73d890ba03667c729f1dbba91b9de5e749&" style="width: 35px; height: 35px; border-radius: 50%;">
+      <div class="logo-header">
+        <div class="logo-text">Orten Store</div>
+        <img src="assets/logo.png" class="logo-img">
       </div>
     </header>
 
     <div class="container">
-      
+      <!-- Section Pricing -->
       <div id="section-pricing" class="content-section active">
-        <h1 style="font-size: 32px;">قائمة المنتجات</h1>
+        <h1>قائمة المنتجات</h1>
         <div class="pricing-grid">
           <div class="price-card">
             <div class="bot-name">بوت تيكت</div>
@@ -153,7 +70,7 @@
             </ul>
             <button class="btn-buy-now" onclick="buy('Games Bot')">أطلب الآن</button>
           </div>
-          <div class="price-card" style="border-left: none;">
+          <div class="price-card">
             <div class="bot-name">البوت الصوتي</div>
             <div class="price-tag">1 <span>ر.س</span></div>
             <ul class="features-list">
@@ -165,116 +82,47 @@
         </div>
       </div>
 
+      <!-- Section Services -->
       <div id="section-services" class="content-section">
         <h1>خدماتنا الاحترافية</h1>
         <div class="glass-box">
-          <p>• برمجة بوتات ديسكورد مخصصة بالكامل.</p><br>
-          <p>• حماية وتأمين السيرفرات من الاختراقات.</p><br>
+          <p>• برمجة بوتات ديسكورد مخصصة بالكامل.</p>
+          <p>• حماية وتأمين السيرفرات من الاختراقات.</p>
           <p>• تصميم وبرمجة لوحات تحكم ويب (Dashboards).</p>
         </div>
       </div>
 
+      <!-- Section Policy -->
       <div id="section-policy" class="content-section">
         <h1>سياسة أورتن</h1>
         <div class="glass-box">
-          <p>1. تسليم المنتجات يتم بشكل فوري وآلي.</p><br>
-          <p>2. لا يمكن استبدال المنتج بعد التفعيل.</p><br>
+          <p>1. تسليم المنتجات يتم بشكل فوري وآلي.</p>
+          <p>2. لا يمكن استبدال المنتج بعد التفعيل.</p>
           <p>3. الدعم الفني متاح لجميع العملاء مجاناً.</p>
         </div>
       </div>
 
+      <!-- Section Support -->
+      <div id="section-support" class="content-section">
+        <h1>الدعم الفني</h1>
+        <div class="glass-box">
+          <p>📧 البريد الإلكتروني: support@ortenstore.com</p>
+          <p>💬 سيرفر الدعم: <a href="https://discord.gg/GjzACbTeJT" target="_blank">انضم الآن</a></p>
+        </div>
+      </div>
+
+      <!-- Section FAQ -->
+      <div id="section-faq" class="content-section">
+        <h1>الأسئلة الشائعة</h1>
+        <div class="glass-box">
+          <p><strong>س: كيف أطلب بوت؟</strong> <br>ج: اضغط على زر "أطلب الآن" وسيتم توجيهك للسيرفر.</p>
+          <p><strong>س: هل يمكن استرداد المبلغ؟</strong> <br>ج: لا، جميع المبيعات نهائية بعد التفعيل.</p>
+          <p><strong>س: هل هناك دعم مجاني؟</strong> <br>ج: نعم، الدعم متاح لجميع العملاء مجانًا.</p>
+        </div>
+      </div>
     </div>
   </div>
 
-<script>
-  const CLIENT_ID = '1397247853163843625';
-  const WEBHOOK_URL = 'https://discord.com/api/webhooks/1484314863219245116/IKrHGi-ibae9Qx52FOOv31SA79Qe4Lyp8tME75zaj4zIbNZYVaoasgOjuRdLjfnBPBXB';
-  let user = null;
-
-  window.onload = async () => {
-    const fragment = new URLSearchParams(window.location.hash.slice(1));
-    const token = fragment.get('access_token') || localStorage.getItem('dc_token');
-    if (token) await authUser(token);
-  };
-
-  async function authUser(token) {
-    try {
-      const res = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) throw new Error();
-      user = await res.json();
-      localStorage.setItem('dc_token', token);
-      window.location.hash = "";
-      
-      document.getElementById('landing-page').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('landing-page').style.display = 'none';
-        document.getElementById('main-store').style.display = 'block';
-        setTimeout(() => document.getElementById('main-store').style.opacity = '1', 50);
-      }, 800);
-      
-      document.getElementById('user-name').innerText = user.username;
-      document.getElementById('user-img').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-      log("دخول ✅", `المستخدم **${user.username}** فتح المتجر.`);
-    } catch { logout(); }
-  }
-
-  function showSection(id) {
-    const sections = document.querySelectorAll('.content-section');
-    const navItems = document.querySelectorAll('nav span');
-    
-    // إخفاء القسم الحالي بأنيميشن خروج
-    sections.forEach(s => {
-      if(s.classList.contains('active')) {
-        s.style.opacity = '0';
-        s.style.transform = 'translateY(-20px)';
-      }
-    });
-
-    setTimeout(() => {
-      sections.forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
-      navItems.forEach(n => n.classList.remove('active'));
-
-      const activeSection = document.getElementById('section-' + id);
-      activeSection.style.display = 'block';
-      // تحفيز المتصفح لإعادة الرسم لتشغيل الأنيميشن
-      activeSection.offsetHeight; 
-      activeSection.classList.add('active');
-      activeSection.style.opacity = '1';
-      activeSection.style.transform = 'translateY(0)';
-      
-      document.getElementById('nav-' + id).classList.add('active');
-    }, 300);
-  }
-
-  function login() {
-    const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
-    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=token&scope=identify`;
-  }
-
-  function logout() {
-    localStorage.removeItem('dc_token');
-    window.location.href = window.location.origin + window.location.pathname;
-  }
-
-  function toggleDropdown() {
-    const menu = document.getElementById('logout-menu');
-    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-  }
-
-  function buy(item) {
-    // تسجيل العملية في الويبهوك
-    log("طلب 💰", `المستخدم **${user.username}** طلب: **${item}**`);
-    // فتح رابط السيرفر في نافذة أو تبويب جديد
-    window.open("https://discord.gg/GjzACbTeJT", "_blank");
-  }
-
-  function log(title, msg) {
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ embeds: [{ title, description: msg, color: 6063574, timestamp: new Date() }] })
-    });
-  }
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
