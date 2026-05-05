@@ -26,6 +26,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Template not found" }, { status: 404 });
   }
 
+  const existingServer = await prisma.server.findUnique({ where: { discordId: serverId } });
+  if (existingServer && existingServer.ownerId !== session.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     // Delete existing channels
     const existingChannels = await getGuildChannels(serverId);
@@ -63,11 +68,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Update server record
-    let server = await prisma.server.findUnique({
-      where: { discordId: serverId },
-    });
-    if (!server) {
-      server = await prisma.server.create({
+    if (!existingServer) {
+      await prisma.server.create({
         data: {
           discordId: serverId,
           name: "Server",
@@ -77,7 +79,7 @@ export async function POST(req: NextRequest) {
       });
     } else {
       await prisma.server.update({
-        where: { id: server.id },
+        where: { id: existingServer.id },
         data: { template: templateId },
       });
     }

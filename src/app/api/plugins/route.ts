@@ -19,6 +19,10 @@ export async function GET(req: NextRequest) {
     include: { plugins: true },
   });
 
+  if (server && server.ownerId !== session.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const defaultPlugins = ["tickets", "levels", "protection", "invites"];
   const plugins = defaultPlugins.map((name) => {
     const existing = server?.plugins.find((p: { name: string; enabled: boolean }) => p.name === name);
@@ -40,6 +44,10 @@ export async function POST(req: NextRequest) {
   }
 
   let server = await prisma.server.findUnique({ where: { discordId: serverId } });
+  if (server && server.ownerId !== session.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   if (!server) {
     server = await prisma.server.create({
       data: {

@@ -19,6 +19,10 @@ export async function GET(req: NextRequest) {
     include: { branding: true },
   });
 
+  if (server && server.ownerId !== session.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   return NextResponse.json(server?.branding || { botName: null, botAvatar: null, nameStyle: null });
 }
 
@@ -28,7 +32,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (session.plan !== "premium" && session.plan !== "elite") {
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    include: { subscription: true },
+  });
+  const plan = user?.subscription?.plan || "free";
+  if (plan !== "premium" && plan !== "elite") {
     return NextResponse.json({ error: "Premium subscription required" }, { status: 403 });
   }
 
@@ -38,6 +47,10 @@ export async function POST(req: NextRequest) {
   }
 
   let server = await prisma.server.findUnique({ where: { discordId: serverId } });
+  if (server && server.ownerId !== session.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   if (!server) {
     server = await prisma.server.create({
       data: { discordId: serverId, name: "Server", ownerId: session.userId },

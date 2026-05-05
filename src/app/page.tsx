@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import { motion } from "framer-motion";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import Navbar from "@/components/layout/Navbar";
 import { useRouter } from "next/navigation";
 import { PLANS } from "@/lib/stripe";
@@ -33,7 +33,7 @@ export default function LandingPage() {
       <Navbar
         user={session?.user}
         isAdmin={session?.isAdmin}
-        onLogout={() => signIn("discord")}
+        onLogout={() => signOut({ callbackUrl: "/" })}
       />
 
       {/* Hero */}

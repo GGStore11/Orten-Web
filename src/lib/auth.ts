@@ -40,8 +40,10 @@ export const authOptions: NextAuthOptions = {
         const discordProfile = profile as { id: string };
         token.discordId = discordProfile.id;
         token.accessToken = account.access_token;
+      }
+      if (token.discordId) {
         const user = await prisma.user.findUnique({
-          where: { discordId: discordProfile.id },
+          where: { discordId: token.discordId as string },
           include: { subscription: true },
         });
         if (user) {

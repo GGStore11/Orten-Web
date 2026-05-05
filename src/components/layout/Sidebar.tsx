@@ -22,7 +22,7 @@ export default function Sidebar({ items, serverName }: SidebarProps) {
 
   return (
     <motion.aside
-      className={`w-64 min-h-[calc(100vh-60px)] bg-[var(--bg-card)] border-${dir === "rtl" ? "l" : "r"} border-[var(--border-color)] p-4 flex flex-col gap-2`}
+      className={`w-64 min-h-[calc(100vh-60px)] bg-[var(--bg-card)] ${dir === "rtl" ? "border-l" : "border-r"} border-[var(--border-color)] p-4 flex flex-col gap-2`}
       initial={{ x: dir === "rtl" ? 100 : -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
